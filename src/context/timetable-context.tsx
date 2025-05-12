@@ -173,6 +173,79 @@ const initialTimetableData: TimeSlot[] = [
     confirmed: false,
     level: 'ND2',
     department: 'Mass Communication'
+  },
+  // Additional new schedule entries
+  {
+    id: '9',
+    day: 'Friday',
+    startTime: '14:00',
+    endTime: '16:00',
+    course: {
+      id: 'com311',
+      code: 'COM311',
+      name: 'Systems Analysis',
+      department: 'Computer Science',
+      lecturerId: 'STAFF001',
+      lecturerName: 'Dr. John Smith'
+    },
+    venue: 'Room 201',
+    confirmed: false,
+    level: 'HND1',
+    department: 'Computer Science'
+  },
+  {
+    id: '10',
+    day: 'Thursday',
+    startTime: '14:00',
+    endTime: '16:00',
+    course: {
+      id: 'com321',
+      code: 'COM321',
+      name: 'Software Engineering',
+      department: 'Computer Science',
+      lecturerId: 'STAFF001',
+      lecturerName: 'Dr. John Smith'
+    },
+    venue: 'Room 302',
+    confirmed: false,
+    level: 'HND1',
+    department: 'Computer Science'
+  },
+  {
+    id: '11',
+    day: 'Monday',
+    startTime: '16:00',
+    endTime: '18:00',
+    course: {
+      id: 'com221',
+      code: 'COM221',
+      name: 'Journalism Ethics',
+      department: 'Mass Communication',
+      lecturerId: 'STAFF002',
+      lecturerName: 'Prof. Sarah Williams'
+    },
+    venue: 'Media Lab 2',
+    confirmed: false,
+    level: 'ND2',
+    department: 'Mass Communication'
+  },
+  {
+    id: '12',
+    day: 'Wednesday',
+    startTime: '10:00',
+    endTime: '12:00',
+    course: {
+      id: 'com412',
+      code: 'COM412',
+      name: 'Artificial Intelligence',
+      department: 'Computer Science',
+      lecturerId: 'STAFF001',
+      lecturerName: 'Dr. John Smith'
+    },
+    venue: 'Computer Lab 3',
+    confirmed: false,
+    level: 'HND2',
+    department: 'Computer Science'
   }
 ];
 

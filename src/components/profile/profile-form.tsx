@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/auth-context';
 import { User } from '@/types/auth';
+import { toast } from '@/components/ui/use-toast';
 
 interface ProfileFormProps {
   isStudent?: boolean;
@@ -38,6 +39,10 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
     e.preventDefault();
     updateUserProfile(formData as Partial<User>);
     setIsEditing(false);
+    toast({
+      title: "Profile updated",
+      description: "Your profile has been successfully updated.",
+    });
   };
 
   const getInitials = (name: string) => {
