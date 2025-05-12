@@ -7,7 +7,7 @@ import { useTimetable } from '@/context/timetable-context';
 
 const LecturerDashboard: React.FC = () => {
   const { user } = useAuth();
-  const { getLecturerSchedule, confirmLecture } = useTimetable();
+  const { getLecturerSchedule, confirmLecture, unconfirmLecture } = useTimetable();
   
   // Get today's lectures for this lecturer
   const allLectures = getLecturerSchedule(user?.id || '');
@@ -24,9 +24,14 @@ const LecturerDashboard: React.FC = () => {
   const todayName = dayNames[today.getDay()];
   const todaysLectures = allLectures.filter(lecture => lecture.day === todayName);
   const upcomingLectures = allLectures.filter(lecture => !lecture.confirmed);
+  const thisWeeksLectures = allLectures.slice(0, 5); // Just show 5 for the dashboard
 
   const handleConfirmLecture = (timeSlotId: string) => {
     confirmLecture(timeSlotId);
+  };
+
+  const handleUnconfirmLecture = (timeSlotId: string) => {
+    unconfirmLecture(timeSlotId);
   };
 
   return (
@@ -84,6 +89,7 @@ const LecturerDashboard: React.FC = () => {
             <TimetableGrid 
               timetableData={todaysLectures} 
               onConfirmLecture={handleConfirmLecture} 
+              onUnconfirmLecture={handleUnconfirmLecture}
             />
           </CardContent>
         </Card>
@@ -100,6 +106,20 @@ const LecturerDashboard: React.FC = () => {
 
       <Card>
         <CardHeader>
+          <CardTitle>This Week's Schedule</CardTitle>
+          <CardDescription>Your upcoming classes for the week</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <TimetableGrid 
+            timetableData={thisWeeksLectures} 
+            onConfirmLecture={handleConfirmLecture}
+            onUnconfirmLecture={handleUnconfirmLecture}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Upcoming Classes</CardTitle>
           <CardDescription>Classes that need confirmation</CardDescription>
         </CardHeader>
@@ -107,7 +127,7 @@ const LecturerDashboard: React.FC = () => {
           {upcomingLectures.length > 0 ? (
             <TimetableGrid 
               timetableData={upcomingLectures} 
-              onConfirmLecture={handleConfirmLecture} 
+              onConfirmLecture={handleConfirmLecture}
             />
           ) : (
             <p className="text-muted-foreground">All your classes are confirmed.</p>

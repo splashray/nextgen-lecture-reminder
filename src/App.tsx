@@ -10,11 +10,14 @@ import { AppLayout } from "@/components/layout/app-layout";
 // Auth Pages
 import AuthPage from "./pages/AuthPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import Index from "./pages/Index";
 
 // Lecturer Pages
 import LecturerDashboard from "./pages/lecturer/LecturerDashboard";
 import LecturerTimetable from "./pages/lecturer/LecturerTimetable";
 import LecturerProfile from "./pages/lecturer/LecturerProfile";
+import LecturerCourses from "./pages/lecturer/LecturerCourses";
+import LecturerClasses from "./pages/lecturer/LecturerClasses";
 
 // Student Pages
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -49,6 +52,7 @@ const AppRoutes = () => {
           )
         }
       />
+      <Route path="/index" element={<Index />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
       {/* Lecturer Routes */}
@@ -56,22 +60,23 @@ const AppRoutes = () => {
         <Route path="lecturer-dashboard" element={<LecturerDashboard />} />
         <Route path="lecturer-timetable" element={<LecturerTimetable />} />
         <Route path="lecturer-profile" element={<LecturerProfile />} />
-        <Route path="lecturer-courses" element={<LecturerTimetable />} />
-        <Route path="lecturer-classes" element={<LecturerTimetable />} />
+        <Route path="lecturer-courses" element={<LecturerCourses />} />
+        <Route path="lecturer-classes" element={<LecturerClasses />} />
       </Route>
 
       {/* Student Routes */}
       <Route path="/" element={<AppLayout requiredRole="student" />}>
         <Route path="student-dashboard" element={<StudentDashboard />} />
         <Route path="student-timetable" element={<StudentTimetable />} />
-        <Route path="student-schedule" element={<StudentTimetable />} />
         <Route path="student-profile" element={<StudentProfile />} />
       </Route>
 
       {/* Common Protected Routes */}
       <Route path="/" element={<AppLayout />}>
         <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="settings" element={<StudentProfile />} />
+        <Route path="profile" element={
+          user?.role === "lecturer" ? <LecturerProfile /> : <StudentProfile />
+        } />
       </Route>
 
       {/* 404 Route */}

@@ -10,6 +10,12 @@ export interface User {
   level?: string;
   courses?: string[];
   profileImage?: string;
+  courseCodes?: string[];
+  classesTeaching?: {
+    department: string;
+    level: string;
+    courseCode: string;
+  }[];
 }
 
 export interface AuthState {

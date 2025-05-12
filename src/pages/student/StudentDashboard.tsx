@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { TimetableGrid } from '@/components/timetable/timetable-grid';
 import { useAuth } from '@/context/auth-context';
 import { useTimetable } from '@/context/timetable-context';
-import { TimeSlot } from '@/types/timetable';
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -31,6 +30,12 @@ const StudentDashboard: React.FC = () => {
   };
   const todayName = dayNames[today.getDay()];
   const todaysSchedule = schedule.filter(lecture => lecture.day === todayName);
+  // Show lectures that have been confirmed in the last 24 hours
+  const recentlyConfirmed = schedule.filter(lecture => {
+    if (!lecture.confirmedAt) return false;
+    const hoursSinceConfirmation = (Date.now() - lecture.confirmedAt) / (1000 * 60 * 60);
+    return lecture.confirmed && hoursSinceConfirmation < 24;
+  });
 
   // Get confirmed lectures
   const confirmedLectures = schedule.filter(lecture => lecture.confirmed);
@@ -101,10 +106,22 @@ const StudentDashboard: React.FC = () => {
         </Card>
       )}
 
+      {recentlyConfirmed.length > 0 && (
+        <Card className="border-green-500">
+          <CardHeader className="bg-green-50">
+            <CardTitle className="text-green-700">Recently Confirmed Lectures</CardTitle>
+            <CardDescription>These lectures have been confirmed in the last 24 hours</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <TimetableGrid timetableData={recentlyConfirmed} />
+          </CardContent>
+        </Card>
+      )}
+
       {confirmedLectures.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Confirmed Lectures</CardTitle>
+            <CardTitle>All Confirmed Lectures</CardTitle>
             <CardDescription>These lectures have been confirmed by lecturers</CardDescription>
           </CardHeader>
           <CardContent>

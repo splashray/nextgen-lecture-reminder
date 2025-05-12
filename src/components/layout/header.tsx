@@ -27,10 +27,6 @@ export const Header: React.FC = () => {
     navigate('/');
   };
 
-  const getProfilePath = () => {
-    return user?.role === 'lecturer' ? '/lecturer-profile' : '/student-profile';
-  };
-
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -47,6 +43,17 @@ export const Header: React.FC = () => {
         </Button>
       </div>
       
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center">
+          <img 
+            src="/placeholder.svg" 
+            alt="NextGen Lecture Reminder" 
+            className="h-8 w-auto mr-2"
+          />
+          <span className="font-bold text-blue-700 hidden md:inline">NextGen Lecture Reminder</span>
+        </div>
+      </div>
+      
       <div className="ml-auto flex items-center space-x-4">
         <div className="relative">
           <DropdownMenu>
@@ -54,7 +61,7 @@ export const Header: React.FC = () => {
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="notification-badge">
+                  <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -81,7 +88,7 @@ export const Header: React.FC = () => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate(getProfilePath())}>
+            <DropdownMenuItem onClick={() => navigate('/profile')}>
               <User className="mr-2 h-4 w-4" />
               Profile
             </DropdownMenuItem>

@@ -40,6 +40,21 @@ const StudentTimetable: React.FC = () => {
           )}
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Confirmed Classes</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {schedule.filter(slot => slot.confirmed).length > 0 ? (
+            <TimetableGrid timetableData={schedule.filter(slot => slot.confirmed)} />
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-lg text-muted-foreground">No classes have been confirmed yet.</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

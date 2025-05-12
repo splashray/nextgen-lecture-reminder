@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Check, Clock } from 'lucide-react';
+import { Check, Clock, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TimeSlot, DayOfWeek } from '@/types/timetable';
@@ -9,6 +9,7 @@ import { useAuth } from '@/context/auth-context';
 interface TimetableGridProps {
   timetableData: TimeSlot[];
   onConfirmLecture?: (timeSlotId: string) => void;
+  onUnconfirmLecture?: (timeSlotId: string) => void;
 }
 
 const daysOfWeek: DayOfWeek[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -23,6 +24,7 @@ const timeSlots = [
 export const TimetableGrid: React.FC<TimetableGridProps> = ({
   timetableData,
   onConfirmLecture,
+  onUnconfirmLecture,
 }) => {
   const { user } = useAuth();
   const isLecturer = user?.role === 'lecturer';
@@ -82,9 +84,22 @@ export const TimetableGrid: React.FC<TimetableGridProps> = ({
                           {isLecturer && onConfirmLecture && (
                             <div className="mt-2">
                               {slot.confirmed ? (
-                                <div className="flex items-center text-green-600">
-                                  <Check className="h-4 w-4 mr-1" />
-                                  <span>Confirmed</span>
+                                <div className="flex flex-col space-y-1">
+                                  <div className="flex items-center text-green-600">
+                                    <Check className="h-4 w-4 mr-1" />
+                                    <span>Confirmed</span>
+                                  </div>
+                                  {onUnconfirmLecture && (
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline"
+                                      className="w-full text-red-500"
+                                      onClick={() => onUnconfirmLecture(slot.id)}
+                                    >
+                                      <X className="h-3 w-3 mr-1" />
+                                      Cancel
+                                    </Button>
+                                  )}
                                 </div>
                               ) : (
                                 <Button 

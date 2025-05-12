@@ -21,6 +21,7 @@ export interface TimeSlot {
   confirmed: boolean;
   level: ClassLevel;
   department: string;
+  confirmedAt?: number; // timestamp when the lecture was confirmed
 }
 
 export interface ClassScheduleParams {

@@ -10,10 +10,14 @@ interface TimetableContextType {
   levels: ClassLevel[];
   getClassSchedule: (params: ClassScheduleParams) => TimeSlot[];
   getLecturerSchedule: (lecturerId: string) => TimeSlot[];
+  getLecturerCourses: (lecturerId: string) => string[];
   confirmLecture: (timeSlotId: string) => void;
+  unconfirmLecture: (timeSlotId: string) => void;
   updateTimeSlot: (timeSlotId: string, updates: Partial<TimeSlot>) => void;
   addTimeSlot: (timeSlot: Omit<TimeSlot, 'id'>) => void;
   removeTimeSlot: (timeSlotId: string) => void;
+  addLecturerToCourse: (lecturerId: string, courseId: string, department: string, level: ClassLevel) => void;
+  removeLecturerFromCourse: (lecturerId: string, courseId: string) => void;
 }
 
 const mockDepartments: DepartmentInfo[] = [
@@ -23,7 +27,7 @@ const mockDepartments: DepartmentInfo[] = [
   { id: 'acc', name: 'Accountancy', levels: ['ND1', 'ND2', 'HND1', 'HND2'] },
 ];
 
-// Sample timetable data
+// Enhanced timetable data with updated course codes
 const initialTimetableData: TimeSlot[] = [
   {
     id: '1',
@@ -31,8 +35,8 @@ const initialTimetableData: TimeSlot[] = [
     startTime: '08:00',
     endTime: '10:00',
     course: {
-      id: 'csc101',
-      code: 'CSC101',
+      id: 'com101',
+      code: 'COM101',
       name: 'Introduction to Computer Science',
       department: 'Computer Science',
       lecturerId: 'STAFF001',
@@ -49,8 +53,8 @@ const initialTimetableData: TimeSlot[] = [
     startTime: '10:00',
     endTime: '12:00',
     course: {
-      id: 'csc203',
-      code: 'CSC203',
+      id: 'com203',
+      code: 'COM203',
       name: 'Web Development',
       department: 'Computer Science',
       lecturerId: 'STAFF001',
@@ -67,8 +71,8 @@ const initialTimetableData: TimeSlot[] = [
     startTime: '14:00',
     endTime: '16:00',
     course: {
-      id: 'com101',
-      code: 'COM101',
+      id: 'com111',
+      code: 'COM111',
       name: 'Introduction to Mass Communication',
       department: 'Mass Communication',
       lecturerId: 'STAFF002',
@@ -103,8 +107,8 @@ const initialTimetableData: TimeSlot[] = [
     startTime: '08:00',
     endTime: '10:00',
     course: {
-      id: 'csc401',
-      code: 'CSC401',
+      id: 'com401',
+      code: 'COM401',
       name: 'Database Systems',
       department: 'Computer Science',
       lecturerId: 'STAFF001',
@@ -114,6 +118,61 @@ const initialTimetableData: TimeSlot[] = [
     confirmed: false,
     level: 'HND1',
     department: 'Computer Science'
+  },
+  // Additional classes
+  {
+    id: '6',
+    day: 'Wednesday',
+    startTime: '08:00',
+    endTime: '10:00',
+    course: {
+      id: 'com411',
+      code: 'COM411',
+      name: 'Advanced Programming',
+      department: 'Computer Science',
+      lecturerId: 'STAFF001',
+      lecturerName: 'Dr. John Smith'
+    },
+    venue: 'Lab 1',
+    confirmed: false,
+    level: 'HND2',
+    department: 'Computer Science'
+  },
+  {
+    id: '7',
+    day: 'Friday',
+    startTime: '10:00',
+    endTime: '12:00',
+    course: {
+      id: 'com201',
+      code: 'COM201',
+      name: 'Data Structures',
+      department: 'Computer Science',
+      lecturerId: 'STAFF001',
+      lecturerName: 'Dr. John Smith'
+    },
+    venue: 'Room 105',
+    confirmed: false,
+    level: 'ND2',
+    department: 'Computer Science'
+  },
+  {
+    id: '8',
+    day: 'Tuesday',
+    startTime: '14:00',
+    endTime: '16:00',
+    course: {
+      id: 'com211',
+      code: 'COM211',
+      name: 'Media Production',
+      department: 'Mass Communication',
+      lecturerId: 'STAFF002',
+      lecturerName: 'Prof. Sarah Williams'
+    },
+    venue: 'Studio A',
+    confirmed: false,
+    level: 'ND2',
+    department: 'Mass Communication'
   }
 ];
 
@@ -123,10 +182,14 @@ const TimetableContext = createContext<TimetableContextType>({
   levels: ['ND1', 'ND2', 'HND1', 'HND2'],
   getClassSchedule: () => [],
   getLecturerSchedule: () => [],
+  getLecturerCourses: () => [],
   confirmLecture: () => {},
+  unconfirmLecture: () => {},
   updateTimeSlot: () => {},
   addTimeSlot: () => {},
   removeTimeSlot: () => {},
+  addLecturerToCourse: () => {},
+  removeLecturerFromCourse: () => {},
 });
 
 export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -152,6 +215,26 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     localStorage.setItem('timetableData', JSON.stringify(timetableData));
   }, [timetableData]);
 
+  // Check for lectures that need to be auto-reset (confirmed more than 5 minutes ago)
+  useEffect(() => {
+    const checkConfirmedLectures = () => {
+      const currentTime = Date.now();
+      const RESET_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
+      
+      setTimetableData(prev => 
+        prev.map(slot => {
+          if (slot.confirmed && slot.confirmedAt && (currentTime - slot.confirmedAt > RESET_TIME)) {
+            return { ...slot, confirmed: false, confirmedAt: undefined };
+          }
+          return slot;
+        })
+      );
+    };
+
+    const interval = setInterval(checkConfirmedLectures, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
+
   const getClassSchedule = (params: ClassScheduleParams): TimeSlot[] => {
     return timetableData.filter(
       slot => slot.level === params.level && slot.department === params.department
@@ -162,13 +245,26 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return timetableData.filter(slot => slot.course.lecturerId === lecturerId);
   };
 
+  const getLecturerCourses = (lecturerId: string): string[] => {
+    const courses = timetableData
+      .filter(slot => slot.course.lecturerId === lecturerId)
+      .map(slot => slot.course.code);
+    
+    // Remove duplicates
+    return [...new Set(courses)];
+  };
+
   const confirmLecture = (timeSlotId: string) => {
     const timeSlot = timetableData.find(slot => slot.id === timeSlotId);
     if (!timeSlot) return;
 
     setTimetableData(prev =>
       prev.map(slot =>
-        slot.id === timeSlotId ? { ...slot, confirmed: true } : slot
+        slot.id === timeSlotId ? { 
+          ...slot, 
+          confirmed: true,
+          confirmedAt: Date.now()
+        } : slot
       )
     );
 
@@ -180,6 +276,30 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         title: 'Lecture Confirmed',
         message: `${user.name} has confirmed the ${timeSlot.course.name} lecture on ${timeSlot.day} from ${timeSlot.startTime} to ${timeSlot.endTime} in ${timeSlot.venue}.`,
         type: 'success',
+      });
+    }
+  };
+
+  const unconfirmLecture = (timeSlotId: string) => {
+    const timeSlot = timetableData.find(slot => slot.id === timeSlotId);
+    if (!timeSlot) return;
+
+    setTimetableData(prev =>
+      prev.map(slot =>
+        slot.id === timeSlotId ? { 
+          ...slot, 
+          confirmed: false,
+          confirmedAt: undefined
+        } : slot
+      )
+    );
+
+    // Notify about the change
+    if (user?.role === 'lecturer') {
+      addNotification({
+        title: 'Lecture Availability Updated',
+        message: `${user.name} has updated the availability for ${timeSlot.course.name} lecture on ${timeSlot.day}.`,
+        type: 'info',
       });
     }
   };
@@ -204,6 +324,70 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setTimetableData(prev => prev.filter(slot => slot.id !== timeSlotId));
   };
 
+  const addLecturerToCourse = (lecturerId: string, courseId: string, department: string, level: ClassLevel) => {
+    const lecturer = lecturerId === 'STAFF001' ? 'Dr. John Smith' : 'Prof. Sarah Williams';
+    
+    // Find if this course already exists
+    const existingSlot = timetableData.find(slot => slot.course.id === courseId);
+    
+    if (existingSlot) {
+      // Just update the lecturer for the course
+      setTimetableData(prev =>
+        prev.map(slot =>
+          slot.course.id === courseId
+            ? { 
+                ...slot, 
+                course: { 
+                  ...slot.course, 
+                  lecturerId: lecturerId,
+                  lecturerName: lecturer
+                } 
+              }
+            : slot
+        )
+      );
+    } else {
+      // Create a new timeslot for this course
+      // This is simplified - in a real app you'd need more data
+      addNotification({
+        title: 'Operation Failed',
+        message: 'Cannot add lecturer to non-existent course. Please create the course first.',
+        type: 'error',
+      });
+    }
+  };
+
+  const removeLecturerFromCourse = (lecturerId: string, courseId: string) => {
+    // Find if this lecturer teaches this course
+    const courseSlots = timetableData.filter(
+      slot => slot.course.id === courseId && slot.course.lecturerId === lecturerId
+    );
+    
+    if (courseSlots.length > 0) {
+      // Remove the lecturer from these slots
+      setTimetableData(prev =>
+        prev.map(slot =>
+          slot.course.id === courseId && slot.course.lecturerId === lecturerId
+            ? { 
+                ...slot, 
+                course: { 
+                  ...slot.course, 
+                  lecturerId: '',
+                  lecturerName: 'Unassigned'
+                } 
+              }
+            : slot
+        )
+      );
+      
+      addNotification({
+        title: 'Lecturer Removed',
+        message: `The lecturer has been removed from course ${courseId}.`,
+        type: 'info',
+      });
+    }
+  };
+
   return (
     <TimetableContext.Provider
       value={{
@@ -212,10 +396,14 @@ export const TimetableProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         levels,
         getClassSchedule,
         getLecturerSchedule,
+        getLecturerCourses,
         confirmLecture,
+        unconfirmLecture,
         updateTimeSlot,
         addTimeSlot,
         removeTimeSlot,
+        addLecturerToCourse,
+        removeLecturerFromCourse,
       }}
     >
       {children}

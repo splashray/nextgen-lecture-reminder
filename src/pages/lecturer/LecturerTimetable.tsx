@@ -9,7 +9,7 @@ import { useAuth } from '@/context/auth-context';
 
 const LecturerTimetable: React.FC = () => {
   const { user } = useAuth();
-  const { departments, levels, getClassSchedule, getLecturerSchedule, confirmLecture } = useTimetable();
+  const { departments, levels, getClassSchedule, getLecturerSchedule, confirmLecture, unconfirmLecture } = useTimetable();
   const [selectedDepartment, setSelectedDepartment] = useState<string>('');
   const [selectedLevel, setSelectedLevel] = useState<ClassLevel | ''>('');
   const [viewMode, setViewMode] = useState<'all' | 'byClass'>('all');
@@ -45,6 +45,16 @@ const LecturerTimetable: React.FC = () => {
     setTimetableData(prev => 
       prev.map(slot => 
         slot.id === timeSlotId ? { ...slot, confirmed: true } : slot
+      )
+    );
+  };
+
+  const handleUnconfirmLecture = (timeSlotId: string) => {
+    unconfirmLecture(timeSlotId);
+    // Update the local timetable data to reflect the unconfirmation
+    setTimetableData(prev => 
+      prev.map(slot => 
+        slot.id === timeSlotId ? { ...slot, confirmed: false } : slot
       )
     );
   };
@@ -101,7 +111,8 @@ const LecturerTimetable: React.FC = () => {
           <CardContent>
             <TimetableGrid 
               timetableData={timetableData} 
-              onConfirmLecture={handleConfirmLecture} 
+              onConfirmLecture={handleConfirmLecture}
+              onUnconfirmLecture={handleUnconfirmLecture}
             />
           </CardContent>
         </Card>
