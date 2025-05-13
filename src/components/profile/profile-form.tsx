@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,11 +21,25 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
     email: user?.email || '',
     department: user?.department || '',
     level: user?.level || '',
-    bio: '',
-    phone: '',
+    bio: user?.bio || '',
+    phone: user?.phone || '',
   });
   
   const [isEditing, setIsEditing] = useState(false);
+  
+  // Update form data when user data changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        email: user.email || '',
+        department: user.department || '',
+        level: user.level || '',
+        bio: user.bio || '',
+        phone: user.phone || '',
+      });
+    }
+  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -56,7 +70,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Profile</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Profile & Settings</h2>
         <p className="text-muted-foreground">
           View and update your personal information
         </p>

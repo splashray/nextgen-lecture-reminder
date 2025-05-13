@@ -6,7 +6,7 @@ const Index = () => {
   const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/signin" />;
   }
 
   // Redirect based on user role

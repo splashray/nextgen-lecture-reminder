@@ -35,23 +35,15 @@ const AppRoutes = () => {
 
   // Redirect based on authentication state and user role
   const getHomePath = () => {
-    if (!isAuthenticated) return "/";
+    if (!isAuthenticated) return "/signin";
     return user?.role === "lecturer" ? "/lecturer-dashboard" : "/student-dashboard";
   };
 
   return (
     <Routes>
       {/* Public Routes */}
-      <Route
-        path="/"
-        element={
-          isAuthenticated ? (
-            <Navigate to={getHomePath()} />
-          ) : (
-            <AuthPage />
-          )
-        }
-      />
+      <Route path="/" element={<Navigate to={isAuthenticated ? getHomePath() : "/signin"} />} />
+      <Route path="/signin" element={isAuthenticated ? <Navigate to={getHomePath()} /> : <AuthPage />} />
       <Route path="/index" element={<Index />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 

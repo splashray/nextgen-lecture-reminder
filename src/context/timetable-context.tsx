@@ -119,7 +119,6 @@ const initialTimetableData: TimeSlot[] = [
     level: 'HND1',
     department: 'Computer Science'
   },
-  // Additional classes
   {
     id: '6',
     day: 'Wednesday',
@@ -174,7 +173,6 @@ const initialTimetableData: TimeSlot[] = [
     level: 'ND2',
     department: 'Mass Communication'
   },
-  // Additional new schedule entries
   {
     id: '9',
     day: 'Friday',
@@ -246,6 +244,97 @@ const initialTimetableData: TimeSlot[] = [
     confirmed: false,
     level: 'HND2',
     department: 'Computer Science'
+  },
+  // Additional classes to make a total of 15+
+  {
+    id: '13',
+    day: 'Friday',
+    startTime: '08:00',
+    endTime: '10:00',
+    course: {
+      id: 'com421',
+      code: 'COM421',
+      name: 'Machine Learning',
+      department: 'Computer Science',
+      lecturerId: 'STAFF001',
+      lecturerName: 'Dr. John Smith'
+    },
+    venue: 'Computer Lab 2',
+    confirmed: false,
+    level: 'HND2',
+    department: 'Computer Science'
+  },
+  {
+    id: '14',
+    day: 'Tuesday',
+    startTime: '08:00',
+    endTime: '10:00',
+    course: {
+      id: 'com121',
+      code: 'COM121',
+      name: 'Introduction to Programming',
+      department: 'Computer Science',
+      lecturerId: 'STAFF001',
+      lecturerName: 'Dr. John Smith'
+    },
+    venue: 'Room 102',
+    confirmed: false,
+    level: 'ND1',
+    department: 'Computer Science'
+  },
+  {
+    id: '15',
+    day: 'Thursday',
+    startTime: '12:00',
+    endTime: '14:00',
+    course: {
+      id: 'com231',
+      code: 'COM231',
+      name: 'Broadcast Media',
+      department: 'Mass Communication',
+      lecturerId: 'STAFF002',
+      lecturerName: 'Prof. Sarah Williams'
+    },
+    venue: 'Studio B',
+    confirmed: false,
+    level: 'ND2',
+    department: 'Mass Communication'
+  },
+  {
+    id: '16',
+    day: 'Monday',
+    startTime: '10:00',
+    endTime: '12:00',
+    course: {
+      id: 'com331',
+      code: 'COM331',
+      name: 'Media Ethics',
+      department: 'Mass Communication',
+      lecturerId: 'STAFF002',
+      lecturerName: 'Prof. Sarah Williams'
+    },
+    venue: 'Lecture Hall B',
+    confirmed: false,
+    level: 'HND1',
+    department: 'Mass Communication'
+  },
+  {
+    id: '17',
+    day: 'Wednesday',
+    startTime: '16:00',
+    endTime: '18:00',
+    course: {
+      id: 'com431',
+      code: 'COM431',
+      name: 'Media Management',
+      department: 'Mass Communication',
+      lecturerId: 'STAFF002',
+      lecturerName: 'Prof. Sarah Williams'
+    },
+    venue: 'Room 301',
+    confirmed: false,
+    level: 'HND2',
+    department: 'Mass Communication'
   }
 ];
 
