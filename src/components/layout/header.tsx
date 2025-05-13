@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Bell, Menu, User, X } from 'lucide-react';
+import { Bell, Menu, User, X, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/auth-context';
@@ -45,11 +45,7 @@ export const Header: React.FC = () => {
       
       <div className="flex items-center space-x-4">
         <div className="flex items-center">
-          <img 
-            src="/placeholder.svg" 
-            alt="NextGen Lecture Reminder" 
-            className="h-8 w-auto mr-2"
-          />
+          <GraduationCap className="h-8 w-8 text-blue-700 mr-2" />
           <span className="font-bold text-blue-700 hidden md:inline">NextGen Lecture Reminder</span>
         </div>
       </div>

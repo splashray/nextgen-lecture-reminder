@@ -7,7 +7,6 @@ import {
   User, 
   BookOpen, 
   Clock, 
-  Settings,
   Users,
   Calendar as CalendarIcon,
 } from 'lucide-react';
@@ -26,14 +25,12 @@ export const Sidebar: React.FC = () => {
         { icon: Calendar, label: 'Timetable', to: '/lecturer-timetable' },
         { icon: Users, label: 'Classes', to: '/lecturer-classes' },
         { icon: User, label: 'Profile', to: '/lecturer-profile' },
-        { icon: Settings, label: 'Settings', to: '/settings' },
       ]
     : [
         { icon: Home, label: 'Dashboard', to: '/student-dashboard' },
         { icon: CalendarIcon, label: 'Timetable', to: '/student-timetable' },
         { icon: Clock, label: 'Schedule', to: '/student-schedule' },
         { icon: User, label: 'Profile', to: '/student-profile' },
-        { icon: Settings, label: 'Settings', to: '/settings' },
       ];
 
   return (

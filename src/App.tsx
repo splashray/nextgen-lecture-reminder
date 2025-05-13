@@ -10,7 +10,6 @@ import { AppLayout } from "@/components/layout/app-layout";
 // Auth Pages
 import AuthPage from "./pages/AuthPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import Index from "./pages/Index";
 
 // Lecturer Pages
 import LecturerDashboard from "./pages/lecturer/LecturerDashboard";
@@ -42,9 +41,8 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/" element={<Navigate to={isAuthenticated ? getHomePath() : "/signin"} />} />
+      <Route path="/" element={<Navigate to="/signin" />} />
       <Route path="/signin" element={isAuthenticated ? <Navigate to={getHomePath()} /> : <AuthPage />} />
-      <Route path="/index" element={<Index />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
       {/* Lecturer Routes */}
@@ -60,6 +58,7 @@ const AppRoutes = () => {
       <Route path="/" element={<AppLayout requiredRole="student" />}>
         <Route path="student-dashboard" element={<StudentDashboard />} />
         <Route path="student-timetable" element={<StudentTimetable />} />
+        <Route path="student-schedule" element={<StudentTimetable />} />
         <Route path="student-profile" element={<StudentProfile />} />
       </Route>
 

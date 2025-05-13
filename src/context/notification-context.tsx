@@ -51,6 +51,35 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
   }, [notifications, user]);
 
+  // Set up real-time checking for new notifications 
+  useEffect(() => {
+    const checkForNewNotifications = () => {
+      // In a real app, this would connect to a server or WebSocket
+      // For our demo, we'll just check localStorage for changes
+      if (user) {
+        const savedNotifications = localStorage.getItem(`notifications_${user.id}`);
+        if (savedNotifications) {
+          try {
+            const parsed = JSON.parse(savedNotifications);
+            setNotifications(current => {
+              // Only update if there are different notifications
+              if (JSON.stringify(parsed) !== JSON.stringify(current)) {
+                return parsed;
+              }
+              return current;
+            });
+          } catch (error) {
+            console.error('Error parsing saved notifications:', error);
+          }
+        }
+      }
+    };
+
+    // Check more frequently for demo purposes (every 5 seconds)
+    const interval = setInterval(checkForNewNotifications, 5000);
+    return () => clearInterval(interval);
+  }, [user]);
+
   const addNotification = (
     notification: Omit<Notification, 'id' | 'timestamp' | 'read'>
   ) => {
