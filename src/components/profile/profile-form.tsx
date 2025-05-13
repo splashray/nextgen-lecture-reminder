@@ -67,6 +67,12 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
       .toUpperCase();
   };
 
+  const handleFieldClick = () => {
+    if (!isEditing) {
+      setIsEditing(true);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -97,7 +103,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
             <CardHeader>
               <CardTitle>Personal Information</CardTitle>
               <CardDescription>
-                Update your personal details
+                {isEditing ? "Make your changes and save" : "Click on any field to edit"}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -109,8 +115,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
                   value={formData.name}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className="cursor-pointer"
-                  onClick={() => !isEditing && setIsEditing(true)}
+                  className={!isEditing ? "cursor-pointer" : ""}
+                  onClick={handleFieldClick}
                 />
               </div>
               <div className="space-y-2">
@@ -122,8 +128,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
                   value={formData.email}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className="cursor-pointer"
-                  onClick={() => !isEditing && setIsEditing(true)}
+                  className={!isEditing ? "cursor-pointer" : ""}
+                  onClick={handleFieldClick}
                 />
               </div>
               {isStudent ? (
@@ -136,8 +142,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
                       value={formData.department}
                       onChange={handleChange}
                       disabled={!isEditing}
-                      className="cursor-pointer"
-                      onClick={() => !isEditing && setIsEditing(true)}
+                      className={!isEditing ? "cursor-pointer" : ""}
+                      onClick={handleFieldClick}
                     />
                   </div>
                   <div className="space-y-2">
@@ -148,8 +154,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
                       value={formData.level}
                       onChange={handleChange}
                       disabled={!isEditing}
-                      className="cursor-pointer"
-                      onClick={() => !isEditing && setIsEditing(true)}
+                      className={!isEditing ? "cursor-pointer" : ""}
+                      onClick={handleFieldClick}
                     />
                   </div>
                 </div>
@@ -162,8 +168,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
                     value={formData.department}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className="cursor-pointer"
-                    onClick={() => !isEditing && setIsEditing(true)}
+                    className={!isEditing ? "cursor-pointer" : ""}
+                    onClick={handleFieldClick}
                   />
                 </div>
               )}
@@ -175,8 +181,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
                   value={formData.phone}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className="cursor-pointer"
-                  onClick={() => !isEditing && setIsEditing(true)}
+                  className={!isEditing ? "cursor-pointer" : ""}
+                  onClick={handleFieldClick}
                 />
               </div>
               <div className="space-y-2">
@@ -188,8 +194,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ isStudent = false }) =
                   onChange={handleChange}
                   disabled={!isEditing}
                   placeholder="Tell us about yourself"
-                  className="cursor-pointer"
-                  onClick={() => !isEditing && setIsEditing(true)}
+                  className={!isEditing ? "cursor-pointer" : ""}
+                  onClick={handleFieldClick}
                 />
               </div>
             </CardContent>

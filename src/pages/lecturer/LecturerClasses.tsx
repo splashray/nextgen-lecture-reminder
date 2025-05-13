@@ -7,13 +7,16 @@ import { Button } from '@/components/ui/button';
 import { ClassLevel } from '@/types/timetable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { AddClassDialog } from '@/components/classes/add-class-dialog';
+import { Plus } from 'lucide-react';
 
 const LecturerClasses: React.FC = () => {
   const { user } = useAuth();
-  const { departments, levels, getLecturerSchedule, addLecturerToCourse, removeLecturerFromCourse } = useTimetable();
+  const { departments, levels, getLecturerSchedule, removeLecturerFromCourse } = useTimetable();
   
   const [selectedDepartment, setSelectedDepartment] = useState<string>(departments[0].name);
   const [selectedLevel, setSelectedLevel] = useState<ClassLevel>(levels[0]);
+  const [addClassDialogOpen, setAddClassDialogOpen] = useState(false);
   
   // Get all classes for this lecturer
   const lecturerClasses = getLecturerSchedule(user?.id || '');
@@ -58,11 +61,17 @@ const LecturerClasses: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">My Classes</h2>
-        <p className="text-muted-foreground">
-          Manage the classes you are assigned to teach
-        </p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">My Classes</h2>
+          <p className="text-muted-foreground">
+            Manage the classes you are assigned to teach
+          </p>
+        </div>
+        <Button onClick={() => setAddClassDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Add Class
+        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -100,10 +109,15 @@ const LecturerClasses: React.FC = () => {
 
         {classGroups.length === 0 && (
           <div className="col-span-2 text-center p-8">
-            <p className="text-muted-foreground">You are not assigned to any classes yet.</p>
+            <p className="text-muted-foreground">You are not assigned to any classes yet. Click the "Add Class" button to get started.</p>
           </div>
         )}
       </div>
+      
+      <AddClassDialog
+        open={addClassDialogOpen}
+        onOpenChange={setAddClassDialogOpen}
+      />
     </div>
   );
 };

@@ -1,13 +1,16 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/auth-context';
 import { useTimetable } from '@/context/timetable-context';
 import { Button } from '@/components/ui/button';
+import { AddCourseDialog } from '@/components/courses/add-course-dialog';
+import { Plus } from 'lucide-react';
 
 const LecturerCourses: React.FC = () => {
   const { user } = useAuth();
   const { getLecturerSchedule, unconfirmLecture, confirmLecture } = useTimetable();
+  const [addCourseDialogOpen, setAddCourseDialogOpen] = useState(false);
   
   // Get all courses for this lecturer
   const schedule = getLecturerSchedule(user?.id || '');
@@ -47,11 +50,17 @@ const LecturerCourses: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">My Courses</h2>
-        <p className="text-muted-foreground">
-          View and manage your assigned courses
-        </p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">My Courses</h2>
+          <p className="text-muted-foreground">
+            View and manage your assigned courses
+          </p>
+        </div>
+        <Button onClick={() => setAddCourseDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Add Course
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -91,10 +100,15 @@ const LecturerCourses: React.FC = () => {
 
         {courses.length === 0 && (
           <div className="col-span-2 text-center p-8">
-            <p className="text-muted-foreground">No courses assigned yet.</p>
+            <p className="text-muted-foreground">No courses assigned yet. Click the "Add Course" button to get started.</p>
           </div>
         )}
       </div>
+      
+      <AddCourseDialog 
+        open={addCourseDialogOpen} 
+        onOpenChange={setAddCourseDialogOpen} 
+      />
     </div>
   );
 };
