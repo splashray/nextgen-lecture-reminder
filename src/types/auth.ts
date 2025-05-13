@@ -16,6 +16,8 @@ export interface User {
     level: string;
     courseCode: string;
   }[];
+  bio?: string;
+  phone?: string;
 }
 
 export interface AuthState {
